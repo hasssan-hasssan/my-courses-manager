@@ -1,3 +1,5 @@
+from django.contrib.auth.hashers import make_password
+
 from rest_framework import status 
 from rest_framework.response import Response 
 from rest_framework.decorators import api_view, permission_classes
@@ -25,12 +27,19 @@ class MyCreatorTokenView(TokenObtainPairView):
     serializer_class = MyCreatorTokenSerializer
     
    
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def userProfile(request):
-    
+    user = request.user
     if request.method == 'GET':
-        user = request.user
+        return Response(UserSerializer(user,many=False).data)
+    
+    elif request.method == 'PUT':
+        data = request.data
+        user.first_name = data['name']
+        if data['password'] != "":
+            user.password = make_password(data['password'])
+        user.save()
         return Response(UserSerializer(user,many=False).data)
     
     

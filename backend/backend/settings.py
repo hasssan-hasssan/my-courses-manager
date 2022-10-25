@@ -134,6 +134,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# My Settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # SIMPLE_JWT settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),

@@ -61,11 +61,10 @@ def registerUser(request):
             is_active=False
         )
         if(activation_email(user)):
-            return Response({DETAIL: WELCOME_TO_MCM}, status= status.HTTP_201_CREATED)
+            return Response({DETAIL: WELCOME_TO_MCM}, status=status.HTTP_201_CREATED)
         else:
             return Response({DETAIL: ERR_SENT_EMAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     except Exception as e:
-        print(e)
         # کاربری با ایمیل مشابه در دیتابیس هست. حالا یا فعال نیست یا گذرواژه خودرا فراموش کرده
         user = User.objects.get(username=username)
         user.password = make_password(password)

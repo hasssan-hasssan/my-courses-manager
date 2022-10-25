@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from rest_framework import status 
 from rest_framework.response import Response 
@@ -12,6 +13,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from base.serializers import UserSerializer
 from base.strConst import *
 from base.utils.email_utils import activation_email
+
+import jwt
+
 
 class MyCreatorTokenSerializer(TokenObtainPairSerializer):
 
@@ -76,4 +80,14 @@ def registerUser(request):
         elif user and user.is_active:
             return Response({DETAIL: PLEASE_LOGIN}, status=status.HTTP_400_BAD_REQUEST)
            
-       
+
+@api_view(['GET'])
+def verifyEmail(request, token):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, ['HS256'])
+        user = User.objects.get(id=payload['user_id'])
+        user.is_active = True
+        user.save()
+        return Response({DETAIL: ACTIVATOIN_SUCCESS}, status=status.HTTP_200_OK)
+    except:
+        return Response({DETAIL: ACTIVATOIN_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

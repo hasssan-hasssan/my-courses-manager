@@ -17,7 +17,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     lessonNo = models.IntegerField()
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     isRecord = models.BooleanField(default=False)
     isConfirm =models.BooleanField(default=False) 
     create = models.DateTimeField(auto_now_add=True)
@@ -25,5 +25,5 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{str(self.course.contractNo)} / L-{self.lessonNo}"
+        return f"{str(self.course.contractNo)} / L- {self.lessonNo}"
     

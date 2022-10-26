@@ -32,6 +32,20 @@ def getMyCourses(request):
             return Response({DETAIL:COURSE_CREATE_SUCCESS}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({DETAIL:COURSE_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyCourse(request, contNo):
+    user = request.user
+    
+    if request.method == 'GET':
+        try:
+            course = user.course_set.get(contractNo=contNo)
+        except Course.DoesNotExist:
+            return Response({DETAIL:COURSE_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(CourseSerializer(course,many=False).data)
+    
     
         

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from base.models import Course, Lesson
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,3 +12,14 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_name(self, obj):
         return obj.first_name
+    
+    
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = "__all__"
+        
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = "__all__"

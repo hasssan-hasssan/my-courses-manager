@@ -20,4 +20,18 @@ def getMyCourses(request):
             return Response({DETAIL: COURSES_NOT_EX_YET}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(CourseSerializer(courses, many=True).data)
+    
+    elif request.method == 'POST':
+        data = request.data
+        try:
+            Course.objects.create(
+                name = data['name'],
+                contractNo=data['contractNo'],
+                user=user,
+            )
+            return Response({DETAIL:COURSE_CREATE_SUCCESS}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({DETAIL:COURSE_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    
         

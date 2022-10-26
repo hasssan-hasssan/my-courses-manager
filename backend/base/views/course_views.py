@@ -35,7 +35,7 @@ def getMyCourses(request):
             return Response({DETAIL:COURSE_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def getMyCourse(request, contNo):
     user = request.user
@@ -64,6 +64,11 @@ def getMyCourse(request, contNo):
                 course.isComplete = data['isComplete']
                 course.save()
                 return Response(CourseSerializer(course, many=False).data)
-
+        elif request.method == 'DELETE':
+            try:
+                course.delete()
+                return Response({DETAIL: COURSE_DEL_SUCCESS}, status=status.HTTP_200_OK)
+            except:
+                return Response({DETAIL: COURSE_DEL_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
         

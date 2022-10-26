@@ -16,3 +16,5 @@ ACTIVATOIN_FAIL = "حساب کاربری شما فعال نشد. لطفا دوب
 
 # Course 
 COURSES_NOT_EX_YET = "هنوز دوره ای ثبت نکرده اید."
+COURSE_CREATE_SUCCESS = "دوره با موفقیت ایجاد شد."
+COURSE_CREATE_FAIL = "در ثبت دوره مشکلی بوجود آمد. لطفا دوباره امتحان کنید."

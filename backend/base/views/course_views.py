@@ -72,7 +72,7 @@ def getMyCourse(request, contNo):
                 return Response({DETAIL: COURSE_DEL_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
  
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def getMyCourseLessons(request, contNo):
     user = request.user
@@ -84,4 +84,17 @@ def getMyCourseLessons(request, contNo):
     else:
         if request.method == 'GET':
             lessons = course.lesson_set.all().order_by('lessonNo')
-            return Response(LessonSerializer(lessons,many=True).data)       
+            return Response(LessonSerializer(lessons,many=True).data)     
+        
+        elif request.method == 'POST':
+            data = request.data
+            try:
+                Lesson.objects.create(
+                    course = course, 
+                    lessonNo = data['lessonNo'],
+                    name = data['name'],
+                    description = data['description'],
+                )  
+                return Response({DETAIL: LESSON_CREATE_SUCCESS}, status=status.HTTP_201_CREATED)
+            except:
+                return Response({DETAIL: LESSON_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

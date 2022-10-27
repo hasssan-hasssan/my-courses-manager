@@ -98,3 +98,22 @@ def getMyCourseLessons(request, contNo):
                 return Response({DETAIL: LESSON_CREATE_SUCCESS}, status=status.HTTP_201_CREATED)
             except:
                 return Response({DETAIL: LESSON_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+
+@api_view(['GET'])
+def getMyCourseLesson(request, contNo, pk):
+    user = request.user
+    try:
+        course = user.course_set.get(contractNo=contNo)
+    except Course.DoesNotExist:
+        return Response({DETAIL: COURSE_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        try:
+            lesson = course.lesson_set.get(id=pk)
+        except Lesson.DoesNotExist:
+            return Response({DETAIL: LESSON_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            
+            if request.method == 'GET':
+                return Response(LessonSerializer(lesson, many=False).data)
+            

@@ -100,7 +100,7 @@ def getMyCourseLessons(request, contNo):
                 return Response({DETAIL: LESSON_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def getMyCourseLesson(request, contNo, pk):
     user = request.user
     try:
@@ -133,3 +133,10 @@ def getMyCourseLesson(request, contNo, pk):
                 else:
                     lesson.save()
                     return Response(LessonSerializer(lesson, many=False).data)
+            elif request.method == 'DELETE':
+                try:
+                    lesson.delete()
+                    return Response({DETAIL: LESSON_DEL_SUCCESS}, status=status.HTTP_200_OK)
+                except:
+                    return Response({DETAIL: LESSON_DEL_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                

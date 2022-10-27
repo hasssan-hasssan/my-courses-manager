@@ -100,7 +100,7 @@ def getMyCourseLessons(request, contNo):
                 return Response({DETAIL: LESSON_CREATE_FAIL}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def getMyCourseLesson(request, contNo, pk):
     user = request.user
     try:
@@ -116,4 +116,20 @@ def getMyCourseLesson(request, contNo, pk):
             
             if request.method == 'GET':
                 return Response(LessonSerializer(lesson, many=False).data)
-            
+            elif request.method == 'PUT':
+                data = request.data
+                
+                lesson.lessonNo = data['lessonNo']
+                lesson.name = data['name']
+                lesson.description = data['description']
+                lesson.isRecord = data['isRecord']
+                if data['isConfirm'] == 'True': # برای تایید شدن باید چک کنیم که آیا درس ضبط شده یا نه؟
+                    if data['isRecord'] == 'True' or lesson.isRecord == True: # ممکن است که ضبط و تایید با هم امده باشند یا از قبل ضبط شده باشد
+                        lesson.isConfirm = data['isConfirm']
+                        lesson.save()
+                        return Response(LessonSerializer(lesson,many=False).data)
+                    else:
+                        return Response({DETAIL: LESSON_ALERT_1}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    lesson.save()
+                    return Response(LessonSerializer(lesson, many=False).data)

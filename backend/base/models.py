@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Course(models.Model):
     name = models.CharField(max_length=250, unique=True)
-    contractNo = models.CharField(max_length=100)
+    contractNo = models.CharField(max_length=100, unique=True)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
     isComplete = models.BooleanField(default=False)

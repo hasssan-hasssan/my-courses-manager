@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from base.models import Course, Lesson
+import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,9 +16,21 @@ class UserSerializer(serializers.ModelSerializer):
     
     
 class CourseSerializer(serializers.ModelSerializer):
+    timeCourse = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Course
-        fields = "__all__"
+        fields = ['name', 'contractNo', 'create', 'update', 'isComplete', 'user', 'timeCourse' ]
+        
+    def get_timeCourse(self,obj):
+        lessons = obj.lesson_set.all()
+        minutes, seconds = 0, 0
+        for lesson in lessons:
+            minutes += lesson.minute
+            seconds += lesson.second
+        all = (minutes * 60) + seconds
+        return str(datetime.timedelta(seconds=all))
+        
+            
         
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:

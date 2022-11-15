@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
+from .strConst import ZERO_TO_SIXTH_ERROR
 
 class Course(models.Model):
     name = models.CharField(max_length=250, unique=True)
@@ -23,6 +25,8 @@ class Lesson(models.Model):
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    minute = models.PositiveIntegerField(default= 0, validators=[MinValueValidator(0, message=ZERO_TO_SIXTH_ERROR),MaxValueValidator(60, message=ZERO_TO_SIXTH_ERROR)])
+    second = models.PositiveIntegerField(default= 0, validators=[MinValueValidator(0, message=ZERO_TO_SIXTH_ERROR),MaxValueValidator(60, message=ZERO_TO_SIXTH_ERROR)])
     
     def __str__(self):
         return f"{str(self.course.contractNo)} / L- {self.lessonNo}"

@@ -11,7 +11,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['course', 'lessonNo', 'create', 'update', 'isRecord','isConfirm',]
+    list_display = ['course', 'lessonNo', 'create', 'update', 'isRecord','isConfirm', 'minute', 'second']
     list_filter = ['create', 'isRecord', 'isConfirm',]
     search_fields = ['name',]
     date_hierarchy = ('create')
